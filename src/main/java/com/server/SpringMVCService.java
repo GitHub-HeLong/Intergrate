@@ -1,8 +1,5 @@
 package com.server;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -20,11 +17,12 @@ public class SpringMVCService {
 	public JSONObject springService() {
 		JSONObject json = new JSONObject();
 
-		List<Map<String, Object>> list = operationMysql.queryDate();
+		boolean result = operationMysql
+				.update("06ef6e96650b4a7bb96bd9e2ada2c951");
 
 		json.put("code", 200);
 		json.put("msg", "success");
-		json.put("json", list);
+		json.put("result", result);
 		return json;
 	}
 

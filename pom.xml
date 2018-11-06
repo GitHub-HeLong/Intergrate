@@ -171,8 +171,61 @@
 			<version>4.1.2.RELEASE</version>
 		</dependency>
 	<!-- spring 的基本依赖 结束 -->
+	<!-- 单点登录配置开始 -->
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
+			<version>3.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
+	<!-- 单点登录配置结束 -->
+	<!-- 新加入的spring整合mongodb的包 开始 -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.13.0-rc0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>1.6.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+		<artifactId>spring-data-mongodb-cross-store</artifactId>
+			<version>1.6.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb-log4j</artifactId>
+			<version>1.6.1.RELEASE</version>
+		</dependency>
+		<!-- 新加入的spring整合mongodb的包 结束 -->
   </dependencies>
-  <build>
+<!--   <build>
     <finalName>Intergrate</finalName>
-  </build>
+  </build> -->
+  
+    <build>
+  	<finalName>Intergrate</finalName>
+	<defaultGoal>compile</defaultGoal>
+	<pluginManagement>
+		<plugins> 
+			<plugin> 
+				<groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-compiler-plugin</artifactId> 
+				<configuration> 
+				<source>1.7</source> 
+				<target>1.7</target> 
+				</configuration> 
+			</plugin>
+		</plugins>
+	</pluginManagement>
+  </build> 
+  
+  
 </project>

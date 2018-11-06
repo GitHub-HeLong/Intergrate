@@ -34,5 +34,8 @@
 	<!-- 扫描任务 -->
     <context:component-scan base-package="com.vrveis.roundTrip.task" />
     <!-- 和定时任务有关  结束-->
+    
+    <!-- 启动服务后会自动运行 class类里面的init-method方法，并且spring注解注入的对象可以正常调用-->
+    <bean id="initMethod" class="com.server.InitMethod" init-method="testinitMethod"></bean>
 	
 </beans>

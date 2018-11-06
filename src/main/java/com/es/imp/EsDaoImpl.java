@@ -1,6 +1,8 @@
 package com.es.imp;
 
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -20,8 +22,19 @@ public class EsDaoImpl implements EsDao {
 			IndexResponse response = ESUtils.client
 					.prepareIndex(index, type, _id).setSource(json).execute()
 					.actionGet();
+
+			LOGGER.info("response :" + response);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 	}
+
+	public SearchResponse fetchBykey(String index) {
+		BoolQueryBuilder boolQuery = new BoolQueryBuilder();
+		SearchResponse searchResponse = ESUtils.client.prepareSearch(index)
+				.setQuery(boolQuery).execute().actionGet();
+
+		return searchResponse;
+	}
+
 }

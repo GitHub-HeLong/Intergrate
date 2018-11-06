@@ -1,9 +1,13 @@
 package com.ctrl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elasticsearch.action.search.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,10 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.es.EsDao;
+import com.mongoDBDao.IUserInfoDao;
 import com.mq.MQSender;
 import com.mq.MqTopicSendServer;
+import com.pojo.UserInfo;
 import com.server.SpringMVCService;
 import com.tool.HttpTool;
+import com.tool.HttpUtil;
 
 @Controller
 @RequestMapping("springMVCCtrl")
@@ -35,6 +42,9 @@ public class SpringMVCCtrl {
 
 	@Resource
 	MqTopicSendServer mqTopicSendServer;
+
+	@Resource
+	IUserInfoDao mongodb;
 
 	@RequestMapping("springMVC")
 	@ResponseBody
@@ -56,7 +66,24 @@ public class SpringMVCCtrl {
 	@ResponseBody
 	public void sendMQToQueryService(HttpServletRequest request,
 			HttpServletResponse response) {
-		mqSender.send("集成mq和mysql！");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:MM:SS");
+		Date date = new Date();
+
+		JSONObject json = new JSONObject();
+		json.put("sysCode", "E123");
+		json.put("eventTime", "2018-06-16 14:18:40");
+		json.put("devId", "100001000");
+		json.put("devZoneId", "0001");
+		json.put("eventSrc", "COM41");
+		json.put("devSubSys", "01");
+
+		while (true) {
+			mqSender.send(json.toJSONString());
+			Date date1 = new Date();
+			if (date.getTime() + 1000 <= date1.getTime()) {
+				break;
+			}
+		}
 	}
 
 	@RequestMapping("sendMQToTopicService")
@@ -77,7 +104,12 @@ public class SpringMVCCtrl {
 		json.put("remarks", "备注！");
 
 		try {
-			esDao.insertAlertProcessings("alare1", "log", "19940717", json);
+			// esDao.insertAlertProcessings("alare1", "log", "19940719", json);
+
+			SearchResponse searchResponse = esDao
+					.fetchBykey("alert_processing");
+
+			System.out.println(searchResponse);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,8 +122,15 @@ public class SpringMVCCtrl {
 
 		try {
 			String str = HttpTool.post3(
-					"http://10.0.17.19:8080/data-sync-up/check.do", "");
-			LOGGER.info("str : {}", str);
+					"http://10.0.17.19:19531/data-sync-up/check.do",
+					"{'name':'HttpToolName'}");
+			LOGGER.info("HttpTool : {}", str);
+
+			// 此方法可以设定请求时长和返回时长
+			String util = HttpUtil.post(
+					"http://10.0.17.19:19531/data-sync-up/check.do",
+					"{'name':'HttpUtilName'}");
+			LOGGER.info("HttpUtil : {}", util);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,6 +145,17 @@ public class SpringMVCCtrl {
 		json.put("size", "10");
 		json.put("currectPage", "5");
 		springMVCService.AOPService("helong", "123456", json);
+	}
+
+	@RequestMapping("textMongDB")
+	@ResponseBody
+	public JSONObject textMongDB(HttpServletRequest request,
+			HttpServletResponse response) {
+		JSONObject json = new JSONObject();
+		UserInfo userInfo = mongodb.getUserInfoById("5a693902a3103d177c65855e");
+		json.put("userInfo", userInfo);
+		return json;
+
 	}
 
 }

@@ -7,4 +7,6 @@ public interface OperationMysql {
 
 	public List<Map<String, Object>> queryDate();
 
+	public boolean update(String eventNumId);
+
 }

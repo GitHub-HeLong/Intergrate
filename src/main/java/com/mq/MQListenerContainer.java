@@ -18,6 +18,7 @@ public class MQListenerContainer implements MessageListener {
 			try {
 				String text = textMessage.getText();
 				logger.info("Listener received text : " + text);
+
 			} catch (JMSException e) {
 				e.printStackTrace();
 			}
